@@ -1,0 +1,106 @@
+﻿@using DoCover.Models;
+@{
+    Layout = null;
+    Users userinfo = ViewBag.User as Users;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>设置我的资料</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+    <script src="~/Page/js/jquery-2.2.4.min.js"></script>
+    <style>
+        .required:before {
+            content: '*';
+            color: red;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">设置我的资料</div>
+                    <div class="layui-card-body" pad15>
+
+                        <div class="layui-form" lay-filter="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">我的角色</label>
+                                <div class="layui-input-inline">
+                                    <select name="user_type" id="type" lay-verify="">
+                                        <option value="0" disabled>管理员</option>
+                                        <option value="1" disabled>美工</option>
+                                        <option value="2" disabled>前台</option>
+                                    </select>
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">当前角色不可更改为其它角色</div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">用户名</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="user_name" value="@userinfo.user_name" readonly class="layui-input">
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">不可修改。一般用于后台登入名</div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">昵称</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="user_nick_name" value="@userinfo.user_nick_name" lay-verify="nickname" autocomplete="off" placeholder="请输入昵称" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label required">QQ</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="user_qq" value="@userinfo.user_qq" lay-verify="user_qq" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">手机</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="user_phone" value="@userinfo.user_phone" lay-verify="user_phone" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">邮箱</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="user_email" value="@userinfo.user_email" lay-verify="user_email" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" lay-submit lay-filter="setmyinfo">确认修改</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重新填写</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../layuiadmin/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../../../layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'set']);
+
+        $(function () {
+            var user_type = '@userinfo.user_type';
+            $('#type option[value="' + user_type + '"]').attr('selected', 'selected');
+        });
+
+    </script>
+</body>
+</html>

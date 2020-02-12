@@ -1,0 +1,127 @@
+﻿
+@{
+    Layout = null;
+    string url = Url.Action("Index", "User", new RouteValueDictionary { { "id", ViewBag.id } }, Request.Url.Scheme, Request.Url.Host);
+    System.Drawing.Bitmap bt;
+    string enCodeString = url;
+    MessagingToolkit.QRCode.Codec.QRCodeEncoder qrCodeEncoder = new MessagingToolkit.QRCode.Codec.QRCodeEncoder();
+    qrCodeEncoder.QRCodeEncodeMode = MessagingToolkit.QRCode.Codec.QRCodeEncoder.ENCODE_MODE.BYTE;
+    qrCodeEncoder.QRCodeErrorCorrect = MessagingToolkit.QRCode.Codec.QRCodeEncoder.ERROR_CORRECTION.H;
+    qrCodeEncoder.QRCodeScale = 3;
+    qrCodeEncoder.QRCodeVersion = 8;
+    bt = qrCodeEncoder.Encode(enCodeString, System.Text.Encoding.UTF8);
+    MemoryStream ms = new MemoryStream();
+    bt.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+    byte[] arr = new byte[ms.Length];
+    ms.Position = 0;
+    ms.Read(arr, 0, (int)ms.Length);
+    ms.Close();
+    string base64Img = "data:image/jpeg;base64," + Convert.ToBase64String(arr);
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>推广链接</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="~/layuiadmin/layui/css/layui.css" rel="stylesheet" />
+    <style type="text/css">
+		.layui-form{
+			margin-top:20px;
+			text-align: center;
+		}
+		.image-box{
+			width:300px;
+			height:400px;
+			padding:10px;
+			margin: 0 auto;
+			background-color: rgba(200, 200, 200,.3);
+			border-radius: 10px;
+		}
+		.ewm{
+			width:250px;
+			height:250px;
+			margin:20px 0 20px 0;
+		}
+		.tis{
+			margin:20px auto;
+			text-align: center;
+			width:250px;
+		}
+		.layui-btn{
+			width: 120px;
+		}
+		.btn-box{
+			display: flex;
+			justify-content: space-between;
+			margin: 0 auto;
+			width:300px;
+		}
+		@@media (max-width: 756px){
+			.image-box{
+				width: 250px;
+				height: 350px;
+			}
+			.ewm{
+				width:200px;
+				height: 200px;
+			}
+		}
+    </style>
+</head>
+<body>
+    <div class="layui-form layui-column">
+        <div class="layui-row-md2">
+            <div class="image-box">
+                <h2>扫码推广</h2>
+                <img src="@base64Img" class="ewm">
+                <h3 id="sentence">@url</h3>
+                <p>我的推广链接</p>
+            </div>
+        </div>
+        <div class="layui-row-md2">
+            <div class="tis">
+                <p>保存二维码发送到微信群或好友/QQ群/论坛/贴吧，邀请更多用户</p>
+            </div>
+            <div class="btn-box">
+                <button class="layui-btn" onclick="downloadImg();">保存二维码</button>
+                <button class="layui-btn copy">复制推广链接</button>
+            </div>
+        </div>
+    </div>
+    <script src="~/layuiadmin/layui/layui.js"></script>
+    <script src="~/layuiadmin/layui/lay/modules/jquery.js"></script>
+    <script src="~/js/clipboard.min.js"></script>
+    <script>
+        var clipboard = new ClipboardJS('.copy', {
+            target: function () {
+                return document.querySelector('#sentence');
+            }
+        });
+
+        clipboard.on('success', function (e) {
+            //console.log(e);
+            layui.use("layer", function () {
+                var layer = layui.layer;
+                layer.msg("复制成功", { area: ['200px', '50px'] });
+            });
+        });
+
+        clipboard.on('error', function (e) {
+            //console.log(e);
+            layui.use("layer", function () {
+                var layer = layui.layer;
+                layer.msg("复制失败，刷新一下试试", { area: ['250px', '50px'] });
+            });
+        });
+        function downloadImg() {                     
+            var a = document.createElement('a');
+            var event = new MouseEvent('click'); 
+            a.download = '专属二维码';           
+            a.href = '@base64Img';                      
+            a.dispatchEvent(event);
+        }
+    </script>
+</body>
+</html>

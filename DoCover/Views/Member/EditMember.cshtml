@@ -1,0 +1,111 @@
+﻿@using DoCover.Models;
+@{
+    Layout = null;
+    Users userinfo = ViewBag.User as Users;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>修改成员</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <style>
+        .required:before {
+            content: '*';
+            color: red;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="layui-form" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin" style="padding: 20px 0 0 0;">
+        <div class="layui-form-item">
+            <input type="text" name="user_id" value="@userinfo.user_id" style="display:none" />
+            <label class="layui-form-label required">用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="user_name" value="@userinfo.user_name" lay-verify="required" placeholder="请输入用户名" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">登录名，最好名字首拼</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">昵称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="user_nick_name" value="@userinfo.user_nick_name" lay-verify="nickname" placeholder="请输入昵称" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">推荐具有代表性名称</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">QQ</label>
+            <div class="layui-input-inline">
+                <input type="text" name="user_qq" value="@userinfo.user_qq" lay-verify="user_qq" placeholder="请输入号码" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">*号代表必填</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-inline">
+                <input type="text" name="user_pwd" placeholder="留空就代表不修改密码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" name="user_email" value="@userinfo.user_email" lay-verify="user_email" placeholder="请输入邮箱" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机号码</label>
+            <div class="layui-input-inline">
+                <input type="text" name="user_phone" value="@userinfo.user_phone" lay-verify="user_phone" placeholder="请输入号码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" lay-filter="sex">
+            <label class="layui-form-label required">选择类型</label>
+            <div class="layui-input-block">
+                @if (userinfo.user_type == 1)
+                {
+                    <input type="radio" name="user_type" value="1" title="美工" checked>
+                    <input type="radio" name="user_type" value="2" title="前台">
+                }
+                else if (userinfo.user_type == 2)
+                {
+                    <input type="radio" name="user_type" value="1" title="美工">
+                    <input type="radio" name="user_type" value="2" title="前台" checked>
+                }
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <input type="button" lay-submit lay-filter="LAY-user-front-submit" id="LAY-user-front-submit" value="确认">
+        </div>
+    </div>
+
+    <script src="../../../layuiadmin/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../../../layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'form', 'upload', 'set'], function () {
+            var $ = layui.$
+                , form = layui.form
+                , upload = layui.upload;
+
+            upload.render({
+                elem: '#layuiadmin-upload-useradmin'
+                , url: layui.setter.base + 'json/upload/demo.js'
+                , accept: 'images'
+                , method: 'get'
+                , acceptMime: 'image/*'
+                , done: function (res) {
+                    $(this.item).prev("div").children("input").val(res.data.src)
+                }
+            });
+        })
+    </script>
+</body>
+</html>
