@@ -1,5 +1,4 @@
 ﻿using DoCover.Common;
-using DoCover.Filter;
 using DoCover.Models;
 using Newtonsoft.Json;
 using System;
